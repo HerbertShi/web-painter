@@ -50,14 +50,18 @@
 		}
 
 	</style>
-
+	<link href="css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" />
+	<link href="css/colorpicker/colorpicker.css" rel="stylesheet" />
 	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/jquery-ui-1.10.3.custom.js"></script>
+	<script src="js/colorpicker.js"></script>
 	<script>
 		var initCanvas = function() {
 			var $canvas = $("<canvas></canvas>");
 
 			$canvas.attr("width", $("#painter").width());
 			$canvas.attr("height", $("#painter").height());
+			$canvas.css("cursor","url('black-pen.ico'),auto");
 
 			var c = $canvas[0];
 			var	cxt = c.getContext("2d");
@@ -67,7 +71,7 @@
 			//路径结合点  
 			cxt.lineJoin = 'round';  
 			//线条颜色  
-			cxt.strokeStyle = '#000'; 
+			cxt.strokeStyle = 'black'; 
 
 			var startPoint = {};
 			var endPoint = {};
@@ -147,6 +151,22 @@
 
 			$("#reset-control").append("<span class=\"reset-element\" style=\"\">reset</span>");
 
+			$("#strokeStyle-control span").last().ColorPicker({
+				onChange: function(hsb, hex, rgb, el) {
+					$("#strokeStyle-control span").last().css('backgroundColor', '#' + hex);
+					$("#strokeStyle-control span").last().html("#" + hex);
+				},
+				onSubmit: function(hsb, hex, rgb, el) {
+					$(el).html("#" + hex);
+					$(el).ColorPickerHide();
+				},
+				onHide: function(colpkr) {
+					cxt.strokeStyle = $("#strokeStyle-control span").last().html();
+					$(colpkr).fadeOut(500);
+					return false;
+				}
+			});
+
 			$(".lineWidth-element").click(function(){
 				cxt.lineWidth = $(this).html();
 			});
@@ -161,6 +181,8 @@
 		};
 
 		$(function() {
+			$(document).disableSelection();
+
 			var $canvas = initCanvas();
 			initToolBar($canvas);
 
