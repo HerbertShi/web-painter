@@ -151,6 +151,9 @@
 
 			$("#reset-control").append("<span class=\"reset-element\" style=\"\">reset</span>");
 
+			$("#strokeStyle-control span").each(function(){
+				$(this).css('backgroundColor', $(this).html());
+			});
 			$("#strokeStyle-control span").last().ColorPicker({
 				onChange: function(hsb, hex, rgb, el) {
 					$("#strokeStyle-control span").last().css('backgroundColor', '#' + hex);
