@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	
+	<script type="text/javascript">
+		var Common = {
+			index: 0,
+			uuid: function() {
+				return ++this.index;
+			}
+		};
+
+		var User = function(name, age) {
+			this.id = Common.uuid();
+			this.name = name;
+			this.age = age;
+		};
+
+		Array.prototype.find = function(key,value){
+			for(var i=0;i<this.length;i++){
+				if(this[i][key] && this[i][key] === value){
+					return this[i];
+				}
+			}
+			return null;
+		};
+		
+		var user1 = new User("a", "1");
+		var user2 = new User("b", "2");
+
+		var userlist = new Array();
+		userlist.push(user1);
+		userlist.push(user2);
+
+		//userlist.find("id".1);
+	</script>
+</head>
+<body>
+	<div>
+		
+	</div>
+</body>
+</html>
