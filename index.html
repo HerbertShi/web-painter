@@ -61,7 +61,7 @@
 
 			$canvas.attr("width", $("#painter").width());
 			$canvas.attr("height", $("#painter").height());
-			$canvas.css("cursor","url('black-pen.ico'),auto");
+			$canvas.css("cursor","url('img/black-pen.ico'),auto");
 
 			var c = $canvas[0];
 			var	cxt = c.getContext("2d");
@@ -146,8 +146,8 @@
 			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">purple</span>");
 			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">free</span>");
 
-			$("#eraser-control").append("<span class=\"eraser-element\">free</span>");
-			$("#eraser-control").append("<span class=\"eraser-element\">free</span>");
+			$("#eraser-control").append("<span class=\"eraser-element\">10</span>");
+			$("#eraser-control").append("<span class=\"eraser-element\">30</span>");
 
 			$("#reset-control").append("<span class=\"reset-element\" style=\"\">reset</span>");
 
@@ -179,7 +179,8 @@
 			});
 
 			$(".eraser-element").click(function(){
-				
+				cxt.strokeStyle = "white";
+				cxt.lineWidth = $(this).html();
 			});
 
 			$(".reset-element").click(function(){
