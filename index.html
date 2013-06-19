@@ -5,16 +5,13 @@
 	<title></title>
 
 	<style type="text/css">
-		#container{
-			margin: 0 auto;
-			width:800px;
-			height:600px;
-		}
 		#painter{
 			border:1px solid #000;
 			width:800px;
 			height:600px;
+			margin: 0 auto;
 		}
+
 		#tool-bar{
 			width:802px;
 			height:50px;
@@ -55,162 +52,26 @@
 	<script src="js/jquery-1.9.1.min.js"></script>
 	<script src="js/jquery-ui-1.10.3.custom.js"></script>
 	<script src="js/colorpicker.js"></script>
+	<script src="js/controller/CanvasControl.js"></script>
 	<script>
-		var initCanvas = function() {
-			var $canvas = $("<canvas></canvas>");
-
-			$canvas.attr("width", $("#painter").width());
-			$canvas.attr("height", $("#painter").height());
-			$canvas.css("cursor","url('img/black-pen.ico'),auto");
-
-			var c = $canvas[0];
-			var	cxt = c.getContext("2d");
-
-			//线条  
-			cxt.lineWidth=5;  
-			//路径结合点  
-			cxt.lineJoin = 'round';  
-			//线条颜色  
-			cxt.strokeStyle = 'black'; 
-
-			var startPoint = {};
-			var endPoint = {};
-			var drawHis = [];
-
-			var draw = function(e) {
-				endPoint.X = e.offsetX;
-				endPoint.Y = e.offsetY;
-
-				cxt.beginPath();
-				cxt.moveTo(startPoint.X, startPoint.Y);
-				cxt.lineTo(endPoint.X, endPoint.Y);
-				cxt.closePath();
-				cxt.stroke();
-
-				startPoint.X = e.offsetX;
-				startPoint.Y = e.offsetY;
-			};
-
-			$canvas.mousedown(function(e) {
-				var value = e.button;
-				if (value != 2 && value != 3) {
-					startPoint.X = e.offsetX;
-					startPoint.Y = e.offsetY;
-
-					$(document).bind("mousemove", function(e) {
-						draw(e);
-					});
-
-					$canvas.bind("mouseenter",function(e){
-						$(document).bind("mousemove", function(e) {
-							draw(e);
-						});
-					});
-
-				}
-			});
-
-			$canvas.mouseout(function(e){
-				$(document).unbind("mousemove");
-			});
-
-			$(document).mouseup(function(e){
-				var value = e.button;
-				if (value != 2 && value != 3) {
-					$(document).unbind("mousemove");
-					$canvas.unbind("mouseenter");
-					drawHis.push($canvas[0].toDataURL());
-				}
-			});
-
-			$("#painter").append($canvas);
-			return $canvas;
-		};
-
-		var initToolBar = function($canvas){
-			var c = $canvas[0];
-			var	cxt = c.getContext("2d");
-
-
-			$("#lineWidth-control").append("<span class=\"lineWidth-element\">5</span>");
-			$("#lineWidth-control").append("<span class=\"lineWidth-element\">10</span>");
-			$("#lineWidth-control").append("<span class=\"lineWidth-element\">30</span>");
-
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">black</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">red</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">orange</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">yellow</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">green</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">cyan</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">blue</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">purple</span>");
-			$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">free</span>");
-
-			$("#eraser-control").append("<span class=\"eraser-element\">10</span>");
-			$("#eraser-control").append("<span class=\"eraser-element\">30</span>");
-
-			$("#reset-control").append("<span class=\"reset-element\" style=\"\">reset</span>");
-
-			$("#strokeStyle-control span").each(function(){
-				$(this).css('backgroundColor', $(this).html());
-			});
-			$("#strokeStyle-control span").last().ColorPicker({
-				onChange: function(hsb, hex, rgb, el) {
-					$("#strokeStyle-control span").last().css('backgroundColor', '#' + hex);
-					$("#strokeStyle-control span").last().html("#" + hex);
-				},
-				onSubmit: function(hsb, hex, rgb, el) {
-					$(el).html("#" + hex);
-					$(el).ColorPickerHide();
-				},
-				onHide: function(colpkr) {
-					cxt.strokeStyle = $("#strokeStyle-control span").last().html();
-					$(colpkr).fadeOut(500);
-					return false;
-				}
-			});
-
-			$(".lineWidth-element").click(function(){
-				cxt.lineWidth = $(this).html();
-			});
-
-			$(".strokeStyle-element").click(function(){
-				cxt.strokeStyle = $(this).html();
-			});
-
-			$(".eraser-element").click(function(){
-				cxt.strokeStyle = "white";
-				cxt.lineWidth = $(this).html();
-			});
-
-			$(".reset-element").click(function(){
-				cxt.clearRect(0, 0, $canvas.width(), $canvas.height());
-			});
-		};
+		
 
 		$(function() {
 			$(document).disableSelection();
 
-			var $canvas = initCanvas();
-			initToolBar($canvas);
+			//var $canvas = initCanvas();
+
+			var canvas = new CanvasControl($("#painter"));
+			//initToolBar(canvas.$canvas);
 
 			$("input").click(function() {
-				window.open($canvas[0].toDataURL());
+				window.open(canvas.context.toDataURL());
 			});
 		});
 	</script>
 
 </head>
 <body>
-	<div id="container">
-		<div id="painter"></div>
-		<div id="tool-bar">
-			<div id="lineWidth-control"></div>
-			<div id="strokeStyle-control"></div>
-			<div id="eraser-control"></div>
-			<div id="reset-control"></div>
-		</div>
-		<input type="button" value="output" />
-	</div>
+	<div id="painter"></div>
 </body>
 </html>
