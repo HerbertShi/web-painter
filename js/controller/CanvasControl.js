@@ -74,7 +74,7 @@ var CanvasControl = function(el) {
 	var initToolBar = function() {
 		initLineWidthControl();
 		
-		initLineWidthControl();
+		initStrokeStyleControl();
 		
 
 		$("#eraser-control").append("<span class=\"eraser-element\">10</span>");
@@ -101,14 +101,6 @@ var CanvasControl = function(el) {
 			}
 		});
 
-		$(".lineWidth-element").click(function() {
-			cxt.lineWidth = $(this).html();
-		});
-
-		$(".strokeStyle-element").click(function() {
-			cxt.strokeStyle = $(this).html();
-		});
-
 		$(".eraser-element").click(function() {
 			cxt.strokeStyle = "white";
 			cxt.lineWidth = $(this).html();
@@ -131,15 +123,20 @@ var CanvasControl = function(el) {
 	};
 
 	var initStrokeStyleControl = function() {
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">black</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">red</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">orange</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">yellow</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">green</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">cyan</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">blue</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">purple</span>");
-		$("#strokeStyle-control").append("<span class=\"strokeStyle-element\">free</span>");
+		this.$strokeStyleControl = $("<div></div>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">black</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">red</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">orange</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">yellow</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">green</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">cyan</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">blue</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">purple</span>");
+		this.$strokeStyleControl.append("<span class=\"strokeStyle-element\">free</span>");
+
+		this.$lineWidthControl.children("..strokeStyle-element").click(function() {
+			self.strokeStyle = $(this).html();
+		});
 	};
 
 	initToolBar();
