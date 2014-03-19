@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+
+	<style type="text/css">
+		#container{
+			margin: 0 auto;
+			width:800px;
+			height:600px;
+		}
+		#painter{
+			border:1px solid #000;
+			width:800px;
+			height:600px;
+		}
+
+	</style>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/jquery-ui-1.10.3.custom.js"></script>
+	<script>
+		var initCanvas = function() {
+			var $canvas = $("<canvas></canvas>");
+
+			$canvas.attr("width", $("#painter").width());
+			$canvas.attr("height", $("#painter").height());
+			$canvas.css("cursor","url('img/black-pen.ico'),auto");
+
+			var c = $canvas[0];
+			var	cxt = c.getContext("2d");
+
+			//线条  
+			cxt.lineWidth=5;  
+			//路径结合点  
+			cxt.lineJoin = 'round';  
+			//线条颜色  
+			cxt.strokeStyle = 'black'; 
+
+			var startPoint = {};
+			var endPoint = {};
+			var drawHis = [];
+
+			var draw = function(e) {
+				endPoint.X = e.offsetX;
+				endPoint.Y = e.offsetY;
+
+				cxt.beginPath();
+				cxt.moveTo(startPoint.X, startPoint.Y);
+				cxt.lineTo(endPoint.X, endPoint.Y);
+				cxt.closePath();
+				cxt.stroke();
+
+				startPoint.X = e.offsetX;
+				startPoint.Y = e.offsetY;
+			};
+
+			$canvas.mousedown(function(e) {
+				var value = e.button;
+				if (value != 2 && value != 3) {
+					startPoint.X = e.offsetX;
+					startPoint.Y = e.offsetY;
+
+					$(document).bind("mousemove", function(e) {
+						draw(e);
+					});
+
+					$canvas.bind("mouseenter",function(e){
+						$(document).bind("mousemove", function(e) {
+							draw(e);
+						});
+					});
+
+				}
+			});
+
+			$canvas.mouseout(function(e){
+				$(document).unbind("mousemove");
+			});
+
+			$(document).mouseup(function(e){
+				var value = e.button;
+				if (value != 2 && value != 3) {
+					$(document).unbind("mousemove");
+					$canvas.unbind("mouseenter");
+					drawHis.push($canvas[0].toDataURL());
+				}
+			});
+
+			$("#painter").append($canvas);
+			return $canvas;
+		};
+
+		$(function() {
+			$(document).disableSelection();
+			var $canvas = initCanvas();
+			$("input").click(function() {
+				window.open($canvas[0].toDataURL());
+			});
+		});
+	</script>
+
+</head>
+<body>
+	<div id="container">
+		<div id="painter"></div>
+		<input type="button" value="output" />
+	</div>
+</body>
+</html>
